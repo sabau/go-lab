@@ -25,11 +25,31 @@ func main() {
 
 
 		// fmt.Fprintln(os.Stderr, "Debug messages...")
-		x := initialTX - lightX
-		y := initialTY - lightY
+		x := lightX - initialTX
+		y := lightY - initialTY
 
+		out := ""
+		for  x != 0 || y != 0 {
+			out = ""
+			if y < 0 {
+				out += "S"
+				y++
+			} else if y > 0 {
+				out += "N"
+				y--
+			}
+
+			if x < 0 {
+				out += "W"
+				x++
+			} else if x > 0 {
+				out += "E"
+				x--
+			}
+			fmt.Println(out)
+		}
 
 		// A single line providing the move to be made: N NE E SE S SW W or NW
-		fmt.Println("SE")
+
 	}
 }
