@@ -26,7 +26,7 @@ func main() {
 
 		// fmt.Fprintln(os.Stderr, "Debug messages...")
 		x := lightX - initialTX
-		y := lightY - initialTY
+		y := initialTY - lightY
 
 		out := ""
 		for  x != 0 || y != 0 {
