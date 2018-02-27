@@ -1,0 +1,63 @@
+func hq9plus(p string) string {
+    ch := make(chan string)
+    go singTheSong(ch)
+    var song bytes.Buffer
+    for {
+        w, ok := <-ch
+        if !ok {
+            break
+        }
+        song.WriteString(w)    
+    }
+        
+    var buffer bytes.Buffer
+    var accumulator int = 0
+    for i := 0; i < len(p); i++ {
+        if p[i] == 'H' {
+            buffer.WriteString("hello, world")
+        }
+        if p[i] == '9' {
+            buffer.WriteString(song.String())
+        }
+        if p[i] == '+' {
+            accumulator++
+        }
+    }
+    
+    return buffer.String()
+
+}
+
+
+var bottlesOfBeer int = 99;
+
+func takeOneBeer(ch chan string) {
+    bottlesOfBeer--;
+    go singTheSong(ch)
+}
+
+func singTheSong(ch chan string) {
+    if bottlesOfBeer > 1 {
+        if bottlesOfBeer == 1 {
+            ch <- fmt.Sprintf("%d bottle of beer on the wall,\n%d bottles of beer.\n", bottlesOfBeer, bottlesOfBeer)
+        } else {
+            ch <- fmt.Sprintf("%d bottles of beer on the wall,\n%d bottles of beer.\n", bottlesOfBeer, bottlesOfBeer)
+        }
+        ch <- fmt.Sprintf("%d bottles of beer on the wall,\n%d bottles of beer.\n", bottlesOfBeer, bottlesOfBeer)
+        if bottlesOfBeer-1 == 1 {
+            ch <- fmt.Sprintf("Take one down, pass it around,\n%d bottle of beer on the wall.\n\n", bottlesOfBeer-1)
+        } else {
+            ch <- fmt.Sprintf("Take one down, pass it around,\n%d bottles of beer on the wall.\n\n", bottlesOfBeer-1)
+        }
+        go takeOneBeer(ch)
+    } else if bottlesOfBeer == 1 {
+        ch <- fmt.Sprintf("1 bottle of beer on the wall,\n1 bottle of beer.\n")
+        ch <- fmt.Sprintf("Take one down, pass it around,\nno more bottles of beer on the wall.\n")
+        go takeOneBeer(ch)
+    } else {
+        ch <- fmt.Sprintf("No more bottles of beer on the wall,\nno more bottles of beer.\n")
+        ch <- fmt.Sprintf("Go to the store and buy some more,\n99 bottles of beer on the wall.\n")
+        bottlesOfBeer = 99
+        close(ch)
+    }
+}
